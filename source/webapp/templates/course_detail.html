@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Блюдо{% endblock %}
+{% block content %}
+    {{ course.name }}
+    {{ course.price }}
+    <img src="{{ course.photo.url }}" alt="Картинка еды">
+{% endblock %}
+
+{# Откройте /food/<pk>, чтобы посмотреть картинку еды на этой странице #}

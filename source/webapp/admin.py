@@ -14,7 +14,7 @@ class EmployeeAdmin(UserAdmin):
 
 class CourseOrderInline(admin.TabularInline):
     model = CourseOrder
-    fields = ['food', 'amount']
+    fields = ['course', 'quantity']
 
 
 class OrderAdmin(admin.ModelAdmin):

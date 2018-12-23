@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Заказ{% endblock %}
+{% block content %}
+    {% for order in order_list %}
+        {{ order.client_name }}
+        {{ order.client_address }}
+        {{ order.client_phone }}
+        {{ order.courses.all }}
+    {% endfor %}
+{% endblock %}
+

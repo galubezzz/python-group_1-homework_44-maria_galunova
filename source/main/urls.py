@@ -15,7 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
+
+
+from webapp.views import CourseDetailView, OrderDetailView, CourseListView, OrderListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('order/<int:pk>', OrderDetailView.as_view(), name='order_detail'),
+    path('course/<int:pk>', CourseDetailView.as_view(), name='course_detail'),
+    path('orders', OrderListView.as_view(), name='order_list'),
+    path('courses', CourseListView.as_view(), name='course_list')
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
