@@ -3,7 +3,9 @@
 {% block content %}
 
     {% for course in course_list %}
-        {{ course.name }} : {{ course.price }}
+        <a href="{% url 'course_detail' course.pk %}" class="nav-link">{{ course.name }}</a> : {{ course.price }} <br>
+        <a href="{% url 'course_update' course.pk %}" class="nav-link">Обновить блюдо</a>
+        <a href="{% url 'course_delete' course.pk %}" class="nav-link">Удалить блюдо</a>
     {% endfor %}
 {% endblock %}
 

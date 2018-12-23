@@ -19,14 +19,17 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 
-from webapp.views import CourseDetailView, OrderDetailView, CourseListView, OrderListView
+from webapp.views import CourseDetailView, OrderDetailView, CourseListView, OrderListView, CourseCreateView, CouseUpdateView, CourseDeleteView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('order/<int:pk>', OrderDetailView.as_view(), name='order_detail'),
     path('course/<int:pk>', CourseDetailView.as_view(), name='course_detail'),
     path('orders', OrderListView.as_view(), name='order_list'),
-    path('courses', CourseListView.as_view(), name='course_list')
+    path('courses', CourseListView.as_view(), name='course_list'),
+    path('courses/create', CourseCreateView.as_view(), name='course_create'),
+    path('courses/<int:pk>/update', CouseUpdateView.as_view(), name='course_update'),
+    path('courses/<int:pk>/delete', CourseDeleteView.as_view(), name='course_delete'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

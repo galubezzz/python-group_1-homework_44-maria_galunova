@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить блюдо{% endblock %}
+
+{% block content %}
+    <h1>Добавить блюдо</h1>
+    <form action="{% url 'course_create' %}" method="post" class="form-group" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+{% endblock %}
