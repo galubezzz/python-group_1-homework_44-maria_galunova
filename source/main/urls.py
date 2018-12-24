@@ -20,7 +20,7 @@ from django.conf import settings
 
 
 from webapp.views import CourseDetailView, OrderDetailView, CourseListView, OrderListView, CourseCreateView, CouseUpdateView, \
-    CourseDeleteView, OrderCreateView, OrderUpdateView, CourseOrderCreateView
+    CourseDeleteView, OrderCreateView, OrderUpdateView, CourseOrderCreateView, CourseOrderUpdateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +34,7 @@ urlpatterns = [
     path('orders/create', OrderCreateView.as_view(), name='order_create'),
     path('orders/<int:pk>/update', OrderUpdateView.as_view(), name='order_update'),
     path('order/<int:pk>/courses/add', CourseOrderCreateView.as_view(), name='add_courses'),
+    path('order/<int:pk>/courses/update', CourseOrderUpdateView.as_view(), name='change_courses'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

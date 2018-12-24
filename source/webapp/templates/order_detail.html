@@ -6,7 +6,8 @@
     {{ order.client_address }}
     {{ order.client_phone }} <br>
     {% for order_course in order.courses.all %}
-        {{ order_course.course.name }}<br>
+        {{ order_course.course.name }} : {{ order_course.quantity }} шт <br>
+        <a href='{% url "change_courses" order.pk %}'>Изменить</a> <br>
     {% endfor %}
 {% endblock %}
 

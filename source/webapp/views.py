@@ -76,3 +76,21 @@ class CourseOrderCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+
+class CourseOrderUpdateView(UpdateView):
+    model = CourseOrder
+    template_name = 'course_order_update.html'
+    form_class = CourseOrderForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_pk'] = self.kwargs.get('pk')
+        return context
+
+    def form_valid(self, form):
+        form.instance.order = Order.objects.get(pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+
+    def get_success_url(self):
+        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
