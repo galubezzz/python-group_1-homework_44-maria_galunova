@@ -10,9 +10,11 @@
         Имя: {{ order.client_name }} <br>
         Адресс: {{ order.client_address }} <br>
         Телефон: {{ order.client_phone }} <br>
+        Статус: {{ order.get_status_display }}
         <a href="{% url 'order_detail' order.pk %}">Подробнее</a> <br>
         <a href="{% url 'order_update' order.pk %}"><i class="fas fa-edit"></i></a> <br>
         <a href="{% url 'add_course' order.pk %}"><i class="fas fa-plus-square"></i></a> <br>
+        <a href="{% url 'order_status_update' order.pk %}">Обновить статус</a><br>
     {% endfor %}
 {% endblock %}
 

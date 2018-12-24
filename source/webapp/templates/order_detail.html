@@ -12,6 +12,7 @@
         <a href='{% url "delete_course" order_course.pk %}'>Удалить</a> <br>
     {% endfor %}
     <a href="{% url 'add_course' order.pk %}">Добавить блюдо</a> <br>
+
 {% endblock %}
 
 {# Откройте /order/<pk>, чтобы посмотреть список блюд для заказа на этой странице #}
