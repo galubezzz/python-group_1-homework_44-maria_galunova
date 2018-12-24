@@ -1,13 +1,18 @@
 {% extends 'base.html' %}
 {% block title %}Заказ{% endblock %}
+{% block menu %}
+    <li class="nav-item">
+        <a href="{% url 'order_create' %}" class="nav-link">Создать заказ</a>
+    </li>
+{% endblock %}
 {% block content %}
     {% for order in order_list %}
-        {{ order.client_name }}
-        {{ order.client_address }}
-        {{ order.client_phone }}
-        <a href="{% url 'order_detail' order.pk %}">Подробнее</a>
-        <a href="{% url 'order_update' order.pk %}">Изменить</a>
-        <a href="{% url 'add_courses' order.pk %}">Добавить блюдо</a>
+        Имя: {{ order.client_name }} <br>
+        Адресс: {{ order.client_address }} <br>
+        Телефон: {{ order.client_phone }} <br>
+        <a href="{% url 'order_detail' order.pk %}">Подробнее</a> <br>
+        <a href="{% url 'order_update' order.pk %}"><i class="fas fa-edit"></i></a> <br>
+        <a href="{% url 'add_course' order.pk %}"><i class="fas fa-plus-square"></i></a> <br>
     {% endfor %}
 {% endblock %}
 

@@ -9,7 +9,7 @@ class CourseForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = []
+        exclude = ['status']
 
 
 class CourseOrderForm(forms.ModelForm):
@@ -17,3 +17,7 @@ class CourseOrderForm(forms.ModelForm):
         model = CourseOrder
         exclude = ['order']
 
+class StatusForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields=['status']

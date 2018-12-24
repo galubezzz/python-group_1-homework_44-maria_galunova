@@ -3,7 +3,7 @@
 {% block title %}Добавить блюдо в заказ{% endblock %}
 
 {% block content %}
-    <form action="{% url 'add_courses' order_pk %}" method="post">
+    <form action="{% url 'add_course' order_pk %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Сохранить</button>
