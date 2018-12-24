@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Заказ{% endblock %}
 {% block content %}
-    {{ order.contact_phone }}
+    {{ order.client_phone }}
+    {{ order.client_name }}
+    {{ order.client_address }}
+    {{ order.client_phone }} <br>
     {% for order_course in order.courses.all %}
-        {{ order_course.course.name }}
+        {{ order_course.course.name }}<br>
     {% endfor %}
 {% endblock %}
 

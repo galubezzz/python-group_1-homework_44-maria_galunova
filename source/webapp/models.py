@@ -41,7 +41,7 @@ class Order(models.Model):
     client_address = models.CharField(max_length=50, verbose_name="Адрес")
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, verbose_name="Статус", default=STATUS_NEW)
     operator = models.ForeignKey(User, on_delete=models.PROTECT, related_name='operator_orders', verbose_name='Оператор')
-    courier =  models.ForeignKey(User, on_delete=models.PROTECT, related_name='courier_orders', verbose_name='Курьер')
+    courier = models.ForeignKey(User, on_delete=models.PROTECT, related_name='courier_orders', verbose_name='Курьер')
 
     def __str__(self):
         return self.client_phone

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Изменить заказ{% endblock %}
+
+{% block content %}
+    {% if order.status == 'beeing delivered' or order.status == 'done' %}
+        <h2>Заказ уже доставляется или доставлен</h2>
+        <a href="{% url "order_list" %}">К списку заказов</a>
+    {% else %}
+    <form action="{% url 'order_update' order.pk %}" method="post">
+        {% csrf_token %}
+        {{ formset.media }}
+        {{ form.as_p }}
+        {% for form in formset %}
+            <hr>
+            <div class="ml-5">
+                {{ form.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static "dynamic_formsets/jquery.formset.js" %}" type="text/javascript"> </script>
+
+  <script type="text/javascript">
+       $('.order-food').formset();
+   </script>
+{% endblock %}

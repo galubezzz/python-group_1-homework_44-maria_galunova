@@ -5,7 +5,8 @@
         {{ order.client_name }}
         {{ order.client_address }}
         {{ order.client_phone }}
-        {{ order.courses.all }}
+        <a href="{% url 'order_detail' order.pk %}">Подробнее</a>
+        <a href="{% url 'order_update' order.pk %}">Изменить</a>
     {% endfor %}
 {% endblock %}
 

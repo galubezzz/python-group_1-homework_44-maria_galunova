@@ -1,7 +1,7 @@
 from webapp.models import Course, Order
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse, reverse_lazy
-from webapp.forms import CourseForm
+from webapp.forms import CourseForm, OrderForm, CourseOrderForm
 
 
 
@@ -43,4 +43,18 @@ class CourseDeleteView(DeleteView):
     success_url = reverse_lazy('course_list')
 
 
+class OrderCreateView(CreateView):
+    model = Order
+    template_name = 'order_create.html'
+    form_class = OrderForm
 
+    def get_success_url(self):
+        return reverse('order_detail', kwargs={'pk': self.object.pk})
+
+class OrderUpdateView(UpdateView):
+    model = Order
+    template_name = 'order_update.html'
+    form_class = OrderForm
+
+    def get_success_url(self):
+        return reverse('order_detail', kwargs={'pk': self.object.pk})
