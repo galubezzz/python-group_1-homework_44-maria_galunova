@@ -7,6 +7,7 @@
         {{ order.client_phone }}
         <a href="{% url 'order_detail' order.pk %}">Подробнее</a>
         <a href="{% url 'order_update' order.pk %}">Изменить</a>
+        <a href="{% url 'add_courses' order.pk %}">Добавить блюдо</a>
     {% endfor %}
 {% endblock %}
 
