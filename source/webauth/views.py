@@ -22,7 +22,7 @@ def login_view(request):
             login(request, user=user)
             redirect_url = next
             if not redirect_url:
-                redirect_url = reverse('webapp:project_list')
+                redirect_url = reverse('order_list')
             return HttpResponseRedirect(redirect_url)
 
     return render(request, 'login.html', context={'next': request.GET.get('next')})

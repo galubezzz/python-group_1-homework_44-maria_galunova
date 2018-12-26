@@ -23,6 +23,8 @@ from webapp.views import CourseDetailView, OrderDetailView, CourseListView, Orde
     CourseDeleteView, OrderCreateView, OrderUpdateView, CourseOrderCreateView, CourseOrderUpdateView, CourseOrderDeleteView, \
     StatusUpdateView
 
+from webauth.views import login_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('order/<int:pk>', OrderDetailView.as_view(), name='order_detail'),
@@ -37,7 +39,8 @@ urlpatterns = [
     path('order/<int:pk>/courses/add', CourseOrderCreateView.as_view(), name='add_course'),
     path('order/<int:pk>/courses/update', CourseOrderUpdateView.as_view(), name='change_course'),
     path('order/<int:pk>/courses/delete', CourseOrderDeleteView.as_view(), name='delete_course'),
-    path('orders/<int:pk>/status_update', StatusUpdateView.as_view(), name='order_status_update')
+    path('orders/<int:pk>/status_update', StatusUpdateView.as_view(), name='order_status_update'),
+    path('login', login_view, name='login')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
