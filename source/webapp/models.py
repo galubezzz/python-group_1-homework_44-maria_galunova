@@ -47,7 +47,10 @@ class Order(models.Model):
     def __str__(self):
         return self.client_phone
 
-
+    class Meta:
+        permissions = [
+            ('can_take_and_deliver_orders', "Может брать и доставлять заказы")
+        ]
 
 class CourseOrder(models.Model):
     order = models.ForeignKey(Order, related_name='courses', verbose_name='Заказ', on_delete=models.PROTECT)

@@ -1,7 +1,7 @@
 from django.urls import path
 from webapp.views import CourseDetailView, OrderDetailView, CourseListView, OrderListView, CourseCreateView, CouseUpdateView, \
     CourseDeleteView, OrderCreateView, OrderUpdateView, CourseOrderCreateView, CourseOrderUpdateView, CourseOrderDeleteView, \
-    StatusUpdateView
+    StatusUpdateView, OrderCancelView
 
 app_name = 'webapp'
 
@@ -19,4 +19,5 @@ urlpatterns = [
     path('order/<int:pk>/courses/update', CourseOrderUpdateView.as_view(), name='change_course'),
     path('order/<int:pk>/courses/delete', CourseOrderDeleteView.as_view(), name='delete_course'),
     path('orders/<int:pk>/status_update', StatusUpdateView.as_view(), name='order_status_update'),
+    path('orders/<int:pk>/cancel', OrderCancelView.as_view(), name='order_cancel'),
 ]
