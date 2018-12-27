@@ -639,11 +639,6 @@
         "order"
       ],
       [
-        "change_order",
-        "webapp",
-        "order"
-      ],
-      [
         "view_order",
         "webapp",
         "order"
@@ -805,7 +800,7 @@
     "client_name": "\u0410\u043d\u0430\u0441\u0442\u0430\u0441\u0438\u044f \u041f\u0430\u0432\u043b\u043e\u0432\u043d\u0430",
     "client_phone": "0(778)76-43-56",
     "client_address": "\u0422\u0440\u0435\u0442\u044c\u044f \u0443\u043b\u0438\u0446\u0430 \u0421\u0442\u0440\u043e\u0438\u0442\u0435\u043b\u0435\u0439",
-    "status": "new",
+    "status": "in progress",
     "operator": [
       "admin"
     ],
@@ -821,7 +816,7 @@
     "client_name": "\u0410\u043d\u043d\u0430 \u041d\u0438\u043a\u043e\u043b\u0430\u0435\u0432\u043d\u0430",
     "client_phone": "0(555)96-54-43",
     "client_address": "\u041f\u0440. \u041c\u0438\u0440\u0430 89",
-    "status": "new",
+    "status": "in progress",
     "operator": [
       "admin"
     ],
@@ -837,7 +832,7 @@
     "client_name": "\u0418\u0432\u0430\u043d \u041f\u0435\u0442\u0440\u043e\u0432\u0438\u0447",
     "client_phone": "0(312)67-78-90",
     "client_address": "3-15-23",
-    "status": "beeing delivered",
+    "status": "in progress",
     "operator": [
       "operator"
     ],

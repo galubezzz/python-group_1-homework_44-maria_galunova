@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}Заказ{% endblock %}
 {% block menu %}
+    {% if perms.webapp.add_order %}
     <li class="nav-item">
         <a href="{% url 'webapp:order_create' %}" class="nav-link">Создать заказ</a>
     </li>
+    {% endif %}
 {% endblock %}
 {% block content %}
     {% for order in order_list %}
@@ -13,11 +15,17 @@
         Статус: {{ order.get_status_display }} <br>
         Курьер: {{ order.courier }} <br>
         Оператор: {{ order.operator }} <br>
+        {% if perms.webapp.view_order %}
         <a href="{% url 'webapp:order_detail' order.pk %}">Подробнее</a> <br>
+        {% endif %}
+        {% if perms.webapp.change_order %}
         <a href="{% url 'webapp:order_update' order.pk %}">Редактировать</a> <br>
+        {% endif %}
+        {% if perms.webapp.change_courseorder %}
         <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо</i></a> <br>
+        {% endif %}
         {% if perms.webapp.can_take_and_deliver_orders %}
-            {% if order.status == 'new' or order.status == 'in progress' %}
+            {% if order.status == 'in progress' %}
                 <a href="{% url 'webapp:order_status_update' order.pk %}">Взять заказ</a><br>
             {% elif order.status == 'beeing delivered' %}
                 <a href="{% url 'webapp:order_status_update' order.pk %}">Отметить как доставленный</a><br>

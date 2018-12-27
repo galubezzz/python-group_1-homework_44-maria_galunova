@@ -5,14 +5,15 @@
     Клиент: {{ order.client_name }} <br>
     Адресс: {{ order.client_address }} <br>
     Телефон: {{ order.client_phone }} <br>
+    <br>
     <h5>Блюда в заказе:</h5>
     {% for order_course in order.courses.all %}
         {{ order_course.course.name }} : {{ order_course.quantity }} шт <br>
-        <a href='{% url "webapp:change_course" order.pk %}'><i class="fas fa-edit"></i></a> <br>
+        <a href='{% url "webapp:change_course" order.pk %}'>Редактировать</a> <br>
         <a href='{% url "webapp:delete_course" order_course.pk %}'>Удалить</a> <br>
+        <hr>
     {% endfor %}
-    <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо</a> <br>
-
+    <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо + </a> <br>
 {% endblock %}
 
 {# Откройте /order/<pk>, чтобы посмотреть список блюд для заказа на этой странице #}
