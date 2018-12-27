@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Удаление блюда</h1>
     <h5>Вы уверены, что хотите удалить блюдо из заказа?</h5>
-    <form action="{% url 'delete_course' object.pk %}" method="post">
+    <form action="{% url 'webapp:delete_course' object.pk %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn, btn-primary">Удалить</button>
     </form>

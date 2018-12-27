@@ -2,7 +2,7 @@
 {% block title %}Заказ{% endblock %}
 {% block menu %}
     <li class="nav-item">
-        <a href="{% url 'order_create' %}" class="nav-link">Создать заказ</a>
+        <a href="{% url 'webapp:order_create' %}" class="nav-link">Создать заказ</a>
     </li>
 {% endblock %}
 {% block content %}
@@ -11,10 +11,10 @@
         Адресс: {{ order.client_address }} <br>
         Телефон: {{ order.client_phone }} <br>
         Статус: {{ order.get_status_display }}
-        <a href="{% url 'order_detail' order.pk %}">Подробнее</a> <br>
-        <a href="{% url 'order_update' order.pk %}"><i class="fas fa-edit"></i></a> <br>
-        <a href="{% url 'add_course' order.pk %}"><i class="fas fa-plus-square"></i></a> <br>
-        <a href="{% url 'order_status_update' order.pk %}">Обновить статус</a><br>
+        <a href="{% url 'webapp:order_detail' order.pk %}">Подробнее</a> <br>
+        <a href="{% url 'webapp:order_update' order.pk %}"><i class="fas fa-edit"></i></a> <br>
+        <a href="{% url 'webapp:add_course' order.pk %}"><i class="fas fa-plus-square"></i></a> <br>
+        <a href="{% url 'webapp:order_status_update' order.pk %}">Обновить статус</a><br>
     {% endfor %}
 {% endblock %}
 

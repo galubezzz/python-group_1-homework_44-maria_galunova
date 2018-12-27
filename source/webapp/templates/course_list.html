@@ -2,14 +2,14 @@
 {% block title %}Заказ{% endblock %}
 {% block menu %}
     <li class="nav-item">
-        <a href="{% url 'course_create' %}" class="nav-link">Создать блюдо</a>
+        <a href="{% url 'webapp:course_create' %}" class="nav-link">Создать блюдо</a>
     </li>
 {% endblock %}
 {% block content %}
     {% for course in course_list %}
-        <a href="{% url 'course_detail' course.pk %}" class="nav-link">{{ course.name }}  : {{ course.price }} руб.</a>
-        <a href="{% url 'course_update' course.pk %}" class="nav-link"><i class="fas fa-edit"></i></a>
-        <a href="{% url 'course_delete' course.pk %}" class="nav-link">Удалить блюдо</a>
+        <a href="{% url 'webapp:course_detail' course.pk %}" class="nav-link">{{ course.name }}  : {{ course.price }} руб.</a>
+        <a href="{% url 'webapp:course_update' course.pk %}" class="nav-link"><i class="fas fa-edit"></i></a>
+        <a href="{% url 'webapp:course_delete' course.pk %}" class="nav-link">Удалить блюдо</a>
     {% endfor %}
 {% endblock %}
 

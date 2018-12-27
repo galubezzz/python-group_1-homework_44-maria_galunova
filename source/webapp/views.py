@@ -30,18 +30,18 @@ class CourseCreateView(CreateView):
     form_class = CourseForm
 
     def get_success_url(self):
-        return reverse('course_detail', kwargs={'pk': self.object.pk})
+        return reverse('webapp:course_detail', kwargs={'pk': self.object.pk})
 
 class CouseUpdateView(UpdateView):
     model = Course
     template_name = 'course_update.html'
     form_class = CourseForm
-    success_url = reverse_lazy('course_list')
+    success_url = reverse_lazy('webapp:course_list')
 
 class CourseDeleteView(DeleteView):
     model = Course
     template_name = 'course_delete.html'
-    success_url = reverse_lazy('course_list')
+    success_url = reverse_lazy('webapp:course_list')
 
 
 class OrderCreateView(CreateView):
@@ -50,7 +50,7 @@ class OrderCreateView(CreateView):
     form_class = OrderForm
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 class OrderUpdateView(UpdateView):
     model = Order
@@ -58,7 +58,7 @@ class OrderUpdateView(UpdateView):
     form_class = OrderUpdateForm
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
 class StatusUpdateView(UpdateView):
     model = Order
@@ -71,7 +71,7 @@ class StatusUpdateView(UpdateView):
         elif order.status == 'beeing delivered':
             order.status = 'done'
         order.save()
-        return redirect('order_list')
+        return redirect('webapp:order_list')
 
 class CourseOrderCreateView(CreateView):
     model = CourseOrder
@@ -89,7 +89,7 @@ class CourseOrderCreateView(CreateView):
 
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
 class CourseOrderUpdateView(UpdateView):
     model = CourseOrder
@@ -107,7 +107,7 @@ class CourseOrderUpdateView(UpdateView):
 
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
 
 class CourseOrderDeleteView(DeleteView):
@@ -115,5 +115,5 @@ class CourseOrderDeleteView(DeleteView):
     template_name = 'course_order_delete.html'
 
     def get_success_url(self):
-        return reverse('order_detail', kwargs={'pk': self.object.order.pk})
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 

@@ -8,10 +8,10 @@
     <h5>Блюда в заказе:</h5>
     {% for order_course in order.courses.all %}
         {{ order_course.course.name }} : {{ order_course.quantity }} шт <br>
-        <a href='{% url "change_course" order.pk %}'><i class="fas fa-edit"></i></a> <br>
-        <a href='{% url "delete_course" order_course.pk %}'>Удалить</a> <br>
+        <a href='{% url "webapp:change_course" order.pk %}'><i class="fas fa-edit"></i></a> <br>
+        <a href='{% url "webapp:delete_course" order_course.pk %}'>Удалить</a> <br>
     {% endfor %}
-    <a href="{% url 'add_course' order.pk %}">Добавить блюдо</a> <br>
+    <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо</a> <br>
 
 {% endblock %}
 

@@ -5,9 +5,9 @@
 {% block content %}
     {% if order.status == 'beeing delivered' or order.status == 'done' %}
         <h2>Заказ уже доставляется или доставлен</h2>
-        <a href="{% url "order_list" %}">К списку заказов</a>
+        <a href="{% url "webapp:order_list" %}">К списку заказов</a>
     {% else %}
-    <form action="{% url 'order_update' order.pk %}" method="post">
+    <form action="{% url 'webapp:order_update' order.pk %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Сохранить</button>
