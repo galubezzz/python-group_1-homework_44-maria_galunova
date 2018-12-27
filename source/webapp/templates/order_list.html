@@ -11,14 +11,16 @@
         Адресс: {{ order.client_address }} <br>
         Телефон: {{ order.client_phone }} <br>
         Статус: {{ order.get_status_display }} <br>
+        Курьер: {{ order.courier }} <br>
+        Оператор: {{ order.operator }} <br>
         <a href="{% url 'webapp:order_detail' order.pk %}">Подробнее</a> <br>
         <a href="{% url 'webapp:order_update' order.pk %}">Редактировать</a> <br>
         <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо</i></a> <br>
         {% if perms.webapp.can_take_and_deliver_orders %}
             {% if order.status == 'new' or order.status == 'in progress' %}
-                <a href="{% url 'webapp:status_update' order.pk %}">Взять заказ</a><br>
+                <a href="{% url 'webapp:order_status_update' order.pk %}">Взять заказ</a><br>
             {% elif order.status == 'beeing delivered' %}
-                <a href="{% url 'webapp:status_update' order.pk %}">Отметить как доставленный</a><br>
+                <a href="{% url 'webapp:order_status_update' order.pk %}">Отметить как доставленный</a><br>
             {% endif %}
         {% endif %}
     {% endfor %}
