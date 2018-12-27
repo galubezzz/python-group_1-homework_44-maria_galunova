@@ -10,11 +10,17 @@
         Имя: {{ order.client_name }} <br>
         Адресс: {{ order.client_address }} <br>
         Телефон: {{ order.client_phone }} <br>
-        Статус: {{ order.get_status_display }}
+        Статус: {{ order.get_status_display }} <br>
         <a href="{% url 'webapp:order_detail' order.pk %}">Подробнее</a> <br>
-        <a href="{% url 'webapp:order_update' order.pk %}"><i class="fas fa-edit"></i></a> <br>
-        <a href="{% url 'webapp:add_course' order.pk %}"><i class="fas fa-plus-square"></i></a> <br>
-        <a href="{% url 'webapp:order_status_update' order.pk %}">Обновить статус</a><br>
+        <a href="{% url 'webapp:order_update' order.pk %}">Редактировать</a> <br>
+        <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо</i></a> <br>
+        {% if perms.webapp.can_take_and_deliver_orders %}
+            {% if order.status == 'new' or order.status == 'in progress' %}
+                <a href="{% url 'webapp:status_update' order.pk %}">Взять заказ</a><br>
+            {% elif order.status == 'beeing delivered' %}
+                <a href="{% url 'webapp:status_update' order.pk %}">Отметить как доставленный</a><br>
+            {% endif %}
+        {% endif %}
     {% endfor %}
 {% endblock %}
 

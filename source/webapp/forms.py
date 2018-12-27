@@ -9,7 +9,7 @@ class CourseForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = ['status']
+        exclude = ['status', 'operator', 'courier']
 
 class OrderUpdateForm(forms.ModelForm):
     class Meta:

@@ -1,9 +1,16 @@
 {% extends 'base.html' %}
 {% block title %}Блюдо{% endblock %}
 {% block content %}
-    {{ course.name }}
-    {{ course.price }}
-    <img src="{{ course.photo.url }}" alt="Картинка еды">
+    <div class="card" style="width: 18rem;">
+      <img src="{{ course.photo.url }}" class="card-img-top" alt="Картинка еды">
+      <div class="card-body">
+        <h5 class="card-title">{{ course.name }}</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ course.price }}</li>
+      </ul>
+    </div>
 {% endblock %}
 
 {# Откройте /food/<pk>, чтобы посмотреть картинку еды на этой странице #}
+

@@ -7,9 +7,17 @@
 {% endblock %}
 {% block content %}
     {% for course in course_list %}
-        <a href="{% url 'webapp:course_detail' course.pk %}" class="nav-link">{{ course.name }}  : {{ course.price }} руб.</a>
-        <a href="{% url 'webapp:course_update' course.pk %}" class="nav-link"><i class="fas fa-edit"></i></a>
-        <a href="{% url 'webapp:course_delete' course.pk %}" class="nav-link">Удалить блюдо</a>
+        <div class="card" style="width: 18rem;">
+          <img src="{{ course.photo.url }}" class="card-img-top" alt="Картинка еды">
+          <div class="card-body">
+            <h5 class="card-title"><a href="{% url 'webapp:course_detail' course.pk %}" class="nav-link">{{ course.name }}</a></h5>
+          </div>
+          <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{ course.price }}</li>
+                <li class="list-group-item"><a href="{% url 'webapp:course_update' course.pk %}" class="nav-link">Редактировать</a></li>
+              <li class="list-group-item"><a href="{% url 'webapp:course_delete' course.pk %}" class="nav-link">Удалить</a></li>
+          </ul>
+        </div>
     {% endfor %}
 {% endblock %}
 

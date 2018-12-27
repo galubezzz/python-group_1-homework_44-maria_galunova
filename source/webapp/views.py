@@ -62,6 +62,12 @@ class OrderCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = OrderForm
     permission_required = 'webapp.view_order'
 
+    def form_valid(self, form):
+        form.instance.status = 'new'
+        form.instance.operator = self.request.user
+        return super().form_valid(form)
+
+
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
 
@@ -74,6 +80,7 @@ class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
+
 
 class OrderCancelView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Order
@@ -89,7 +96,6 @@ class OrderCancelView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
             print("Заказ нельзя отменить")
         order.save()
         return redirect('webapp:order_list')
-
 
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.pk})
