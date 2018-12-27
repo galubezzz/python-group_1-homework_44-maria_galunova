@@ -11,6 +11,7 @@ class Employee(models.Model):
         return self.user.get_full_name()
 
 
+
 class Course(models.Model):
     name = models.CharField(max_length=50, verbose_name="Название блюда")
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Цена")
@@ -45,6 +46,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.client_phone
+
 
 
 class CourseOrder(models.Model):
