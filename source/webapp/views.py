@@ -1,15 +1,16 @@
 from webapp.models import Course, Order, CourseOrder
-from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse, reverse_lazy
 from webapp.forms import CourseForm, OrderForm, CourseOrderForm, StatusForm, OrderUpdateForm
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import JsonResponse
 
 
-
-class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+class OrderDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView, FormView):
     model = Order
     template_name = 'order_detail.html'
+    form_class = CourseOrderForm
     permission_required = 'webapp.view_order'
 
 
@@ -163,4 +164,25 @@ class CourseOrderDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
 
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
+
+class CourseOrderAjaxCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = CourseOrder
+    form_class = CourseOrderForm
+    permission_required = 'webapp.view_courseorder'
+
+
+    def form_valid(self, form):
+        form.instance.order = Order.objects.get(pk=self.kwargs.get('pk'))
+        order_course = form.save()
+        return JsonResponse({
+            'course': order_course.course.name,
+            'quantity': order_course.quantity,
+            'order_pk': order_course.order.pk,
+            'pk': order_course.pk
+        })
+
+    def form_invalid(self, form):
+        return JsonResponse({
+            'errors': form.errors
+        }, status='422')
 

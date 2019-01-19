@@ -7,13 +7,106 @@
     Телефон: {{ order.client_phone }} <br>
     <br>
     <h5>Блюда в заказе:</h5>
-    {% for order_course in order.courses.all %}
-        {{ order_course.course.name }} : {{ order_course.quantity }} шт <br>
+    <p>(<a href="#" data-toggle="modal" data-target="#food_edit_modal">Добавить</a>)</p>
+    <ul id="order_food_list">
+        {% for order_course in order.courses.all %}
+            <li>{{ order_course.course.name }} : {{ order_course.quantity }} шт <br>
+        (<a href="#">Изменить</a>/<a href="#">Удалить</a>)
         <a href='{% url "webapp:change_course" order.pk %}'>Редактировать</a> <br>
         <a href='{% url "webapp:delete_course" order_course.pk %}'>Удалить</a> <br>
-        <hr>
+        <hr></li>
+        </ul>
     {% endfor %}
     <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо + </a> <br>
-{% endblock %}
 
+    <div class="modal" tabindex="-1" role="dialog" id="food_edit_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавить блюда</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="course_form" action="{% url 'webapp:order_course_create' order.pk %}" method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="order_submit">Добавить</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script type="application/javascript">
+    function addOrderCourseSuccess(response, status) {
+            // выводим содержимое ответа и статус в консоль.
+            console.log(response);
+            console.log(status);
+            // создаём новый пункт списка блюд
+            let newCourseLi = document.createElement('li');
+            // заполняем новый пункт списка блюд разметкой - текстом и ссылками
+            // т.к. ответ - это JSON-объект,
+            // то с ним можно работать, как с объектом JS,
+            // и обращаться к его свойствам через точку.
+            // используем форматированную строку,
+            // которая обозначается апострофами (``)
+            // и позволяет подставлять в неё переменные через ${}.
+            $(newCourseLi).html(
+                `${response.course}: ${response.quantity}шт. (<a href="#">Изменить</a>/<a href="#">Удалить</a>)`
+            );
+            // добавляем новый пункт в список
+            $('#order_food_list').append(newCourseLi);
+            // выключаем модальное окно
+            $('#food_edit_modal').modal('toggle');
+        }
+        // функция, которая обрабатывает неуспешный AJAX-запрос
+        function submitOrderCourseError(response, status) {
+            // выводим содержимое ответа и статус в консоль.
+            console.log(response);
+            console.log(status);
+        }
+        // функция, которая отправляет AJAX-запрос с формой
+        // по клику на кнопку "Добавить"
+        function addOrderCourse() {
+            // определяем url для отправки формы course_form по её свойству action:
+            let url = $('#course_form').attr('action');
+            // собираем данные, указанные в форме course_form
+            let data = {
+                course: $('#id_course').val(),
+                quantity: $('#id_quantity').val(),
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+            };
+            // отправляем данные
+            // опции success и error должны быть функциями,
+            // которые jQuery вызовет при успешной и неуспешной отправке запроса, соответственно
+            // (т.н. "колбэки" - "callback" - функции обратной связи).
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: data,
+                success: addOrderCourseSuccess,
+                error: submitOrderCourseError
+            });
+        }
+        // назначаем действие на нажатие кнопки "Добавить" в модалке.
+        $('#order_submit').on('click', function(e) {
+            // отправляем форму
+            $('#course_form').submit();
+        });
+        // назначаем действие на отправку формы course_form.
+        $('#course_form').on('submit', function(e) {
+            // отменить обычную отправку формы (действие по умолчанию с перезагрузкой страницы)
+            e.preventDefault();
+            // отправить форму с помощью функции addOrderCourse, которая использует AJAX-запрос.
+            addOrderCourse();
+        });
+    </script>
+{% endblock %}
 {# Откройте /order/<pk>, чтобы посмотреть список блюд для заказа на этой странице #}
