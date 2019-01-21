@@ -207,3 +207,10 @@ class CourseOrderAjaxUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upd
         return JsonResponse({
             'errors': form.errors
         }, status='422')
+
+class CourseOrderAjaxDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = CourseOrder
+    permission_required = 'webapp.delete_courseorder'
+
+    def get_success_url(self):
+        return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})

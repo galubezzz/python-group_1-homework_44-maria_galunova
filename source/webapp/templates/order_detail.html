@@ -12,7 +12,8 @@
             <li>
                 <span id="order_course_name_{{ order_course.pk }}" data-course_pk="{{ order_course.course.pk }}">{{ order_course.course.name }}</span>
                 <span id="order_course_quantity_{{ order_course.pk }}">{{ order_course.quantity }}</span> шт <br>
-                (<a href="{% url 'webapp:order_course_update' order_course.pk %}" data-pk="{{ order_course.pk }}" class="edit_link">Изменить</a>/<a href="#">Удалить</a>)
+                (<a href="{% url 'webapp:order_course_update' order_course.pk %}" data-pk="{{ order_course.pk }}" class="edit_link">Изменить</a>/
+                <a href="{% url 'webapp:order_course_delete' order_course.pk %}" class="delete_link">Удалить</a>)
                 <hr>
             </li>
         {% endfor %}
@@ -48,10 +49,9 @@
     <script type="application/javascript">
 
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     function onCreateSuccess(response, status) {
     // выводим содержимое ответа и статус в консоль.
-          console.log("Dadada!");
+
     console.log(response);
     console.log(status);
 
@@ -98,8 +98,8 @@
 }
 
 
-// функция, которая обрабатывает успешный AJAX-запрос на изменение блюда
-function onUpdateSuccess(response, status) {
+    // функция, которая обрабатывает успешный AJAX-запрос на изменение блюда
+    function onUpdateSuccess(response, status) {
     // выводим содержимое ответа и статус в консоль.
     console.log(response);
     console.log(status);
@@ -117,7 +117,7 @@ function onUpdateSuccess(response, status) {
 
 // функция, которая обрабатывает неуспешный AJAX-запрос
 // и на добавление, и на изменение блюда
-function onFormSubmitError(response, status) {
+    function onFormSubmitError(response, status) {
     // выводим содержимое ответа и статус в консоль.
     console.log("Netnetnet");
     console.log(response);
@@ -133,7 +133,7 @@ function onFormSubmitError(response, status) {
 
 // функция, которая отправляет AJAX-запрос с формой
 // и вызывает переданную функцию в случае успеха
-function orderFoodFormSubmit(success) {
+    function orderFoodFormSubmit(success) {
     // определяем url для отправки формы food_form по её свойству action:
     let url = $('#course_form').attr('action');
 
@@ -159,7 +159,7 @@ function orderFoodFormSubmit(success) {
 
 
 // Обработка клика по ссылке "Добавить"
-function onOrderCourseCreate(event) {
+    function onOrderCourseCreate(event) {
     event.preventDefault();
 
     // меняем заголовок и текст на кнопке "Добавить" в модалке
@@ -197,51 +197,78 @@ function onOrderCourseCreate(event) {
 
 
     function onOrderCourseUpdate(event) {
-    // отменяем действие по умолчанию (переход по ссылке)
-    event.preventDefault();
+        // отменяем действие по умолчанию (переход по ссылке)
+        event.preventDefault();
 
-    // меняем заголовок и текст на кнопке "Добавить" в модалке
-    $("#food_edit_modal .modal-title").text('Изменить блюдо');
-    $("#order_submit").text('Изменить');
+        // меняем заголовок и текст на кнопке "Добавить" в модалке
+        $("#food_edit_modal .modal-title").text('Изменить блюдо');
+        $("#order_submit").text('Изменить');
 
-    // меняем action в форме в модалке на url,
-    // указанный в href нажатой ссылки на редактирование.
-    // this в обработчиках событий указывает на тот объект,
-    // к которому привязано событие, в данном случае -
-    // на ту ссылку, которая была нажата.
-    let foodForm = $('#course_form');
-    foodForm.attr('action', $(this).attr('href'));
+        // меняем action в форме в модалке на url,
+        // указанный в href нажатой ссылки на редактирование.
+        // this в обработчиках событий указывает на тот объект,
+        // к которому привязано событие, в данном случае -
+        // на ту ссылку, которая была нажата.
+        let foodForm = $('#course_form');
+        foodForm.attr('action', $(this).attr('href'));
 
-    // находим элементы с именем блюда и количеством блюда на странице,
-    // используя свойство data-pk нажатой ссылки.
-    let coursePk = $(this).data('pk');
-    let courseName = $('#order_course_name_' + coursePk);  // '#order_course_name_1'
-    let courseQuantity = $('#order_course_quantity_' + coursePk);  // '#order_course_quantity_1'
+        // находим элементы с именем блюда и количеством блюда на странице,
+        // используя свойство data-pk нажатой ссылки.
+        let coursePk = $(this).data('pk');
+        let courseName = $('#order_course_name_' + coursePk);  // '#order_course_name_1'
+        let courseQuantity = $('#order_course_quantity_' + coursePk);  // '#order_course_quantity_1'
         console.log(courseName);
         console.log(courseQuantity.text());
 
-    // задаём в форме исходные значения для данного блюда в заказе.
-    // т.к. на странице выводится название блюда, а нам нужен его pk,
-    // pk сохраняем и получаем через data-атрибут food_pk.
-    $('#id_course').val(courseName.data('course_pk'));
-    $('#id_quantity').val(courseQuantity.text());
+        // задаём в форме исходные значения для данного блюда в заказе.
+        // т.к. на странице выводится название блюда, а нам нужен его pk,
+        // pk сохраняем и получаем через data-атрибут food_pk.
+        $('#id_course').val(courseName.data('course_pk'));
+        $('#id_quantity').val(courseQuantity.text());
 
-    // отключаем предыдущие обработчики события отправки формы
-    foodForm.off('submit');
+        // отключаем предыдущие обработчики события отправки формы
+        foodForm.off('submit');
 
-    // задаём обработчик события отправки формы
-    foodForm.submit(function (event) {
-        // отменяем действие по умолчанию (обычная отправка формы)
+        // задаём обработчик события отправки формы
+        foodForm.submit(function (event) {
+            // отменяем действие по умолчанию (обычная отправка формы)
+            event.preventDefault();
+
+            // отправить форму с помощью функции orderFoodFormSubmit, которая использует AJAX-запрос.
+            // в случае успеха вызвать функцию onUpdateSuccess
+            orderFoodFormSubmit(onUpdateSuccess);
+        });
+
+        // показываем модалку на экране.
+        $('#food_edit_modal').modal('show');
+    }
+
+    function onOrderCourseDelete(event) {
         event.preventDefault();
+        console.log("Ebanina!");
+        if (confirm('Вы действительно хотите удалить блюдо?')) {
+            // если пользователь подтверждает удаление, сохраняем ссылку на удаляемое блюдо
+            // из атрибута 'href' в переменную url
+            let url = $(this).attr('href');
 
-        // отправить форму с помощью функции orderFoodFormSubmit, которая использует AJAX-запрос.
-        // в случае успеха вызвать функцию onUpdateSuccess
-        orderFoodFormSubmit(onUpdateSuccess);
-    });
+            // находим родительский элемент (само блюдо) и сохраняем его в переменную item
+            let item = $(this).parent('li');
 
-    // показываем модалку на экране.
-    $('#food_edit_modal').modal('show');
-}
+            // делаем AJAX-запрос на удаление блюда
+            $.ajax({
+                url: url,
+                method: 'POST',
+                data: {
+                    csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+                },
+                success: function (response, status) {
+                    // если от сервера пришло подтверждение удаления, удаляем html-элемент на странице
+                    item.remove();
+                }
+            })
+        }
+    }
+
 
 window.addEventListener('load', function () {
     // назначаем действие на нажатие кнопки "Добавить" в модалке.
@@ -256,6 +283,11 @@ window.addEventListener('load', function () {
 
     // настраиваем изменение блюд по клику на ссылки "Изменить"
     $('#order_food_list .edit_link').click(onOrderCourseUpdate);
+
+    //$('#order_food_list').on('click', '.edit_link', onOrderCourseUpdate);
+
+    // настраиваем изменение блюд по клику на ссылки "Удалить"
+    $('#order_food_list .delete_link').click(onOrderCourseDelete);
 });
 
     </script>
