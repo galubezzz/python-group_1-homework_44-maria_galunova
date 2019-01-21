@@ -7,17 +7,17 @@
     Телефон: {{ order.client_phone }} <br>
     <br>
     <h5>Блюда в заказе:</h5>
-    <p>(<a href="#" data-toggle="modal" data-target="#food_edit_modal">Добавить</a>)</p>
     <ul id="order_food_list">
         {% for order_course in order.courses.all %}
-            <li>{{ order_course.course.name }} : {{ order_course.quantity }} шт <br>
-        (<a href="#">Изменить</a>/<a href="#">Удалить</a>)
-        <a href='{% url "webapp:change_course" order.pk %}'>Редактировать</a> <br>
-        <a href='{% url "webapp:delete_course" order_course.pk %}'>Удалить</a> <br>
-        <hr></li>
-        </ul>
-    {% endfor %}
-    <a href="{% url 'webapp:add_course' order.pk %}">Добавить блюдо + </a> <br>
+            <li>
+                <span id="order_course_name_{{ order_course.pk }}" data-course_pk="{{ order_course.course.pk }}">{{ order_course.course.name }}</span>
+                <span id="order_course_quantity_{{ order_course.pk }}">{{ order_course.quantity }}</span> шт <br>
+                (<a href="{% url 'webapp:order_course_update' order_course.pk %}" data-pk="{{ order_course.pk }}" class="edit_link">Изменить</a>/<a href="#">Удалить</a>)
+                <hr>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'webapp:order_course_create' order.pk %}" id="order_food_add_link">Добавить блюдо + </a> <br>
 
     <div class="modal" tabindex="-1" role="dialog" id="food_edit_modal">
         <div class="modal-dialog" role="document">
@@ -30,6 +30,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="course_form" action="{% url 'webapp:order_course_create' order.pk %}" method="post">
+                        <div class="text-danger" id="food_form_errors"></div>
                         {% csrf_token %}
                         {{ form.as_p }}
                     </form>
@@ -45,68 +46,219 @@
 {% endblock %}
 {% block scripts %}
     <script type="application/javascript">
-    function addOrderCourseSuccess(response, status) {
-            // выводим содержимое ответа и статус в консоль.
-            console.log(response);
-            console.log(status);
-            // создаём новый пункт списка блюд
-            let newCourseLi = document.createElement('li');
-            // заполняем новый пункт списка блюд разметкой - текстом и ссылками
-            // т.к. ответ - это JSON-объект,
-            // то с ним можно работать, как с объектом JS,
-            // и обращаться к его свойствам через точку.
-            // используем форматированную строку,
-            // которая обозначается апострофами (``)
-            // и позволяет подставлять в неё переменные через ${}.
-            $(newCourseLi).html(
-                `${response.course}: ${response.quantity}шт. (<a href="#">Изменить</a>/<a href="#">Удалить</a>)`
-            );
-            // добавляем новый пункт в список
-            $('#order_food_list').append(newCourseLi);
-            // выключаем модальное окно
-            $('#food_edit_modal').modal('toggle');
-        }
-        // функция, которая обрабатывает неуспешный AJAX-запрос
-        function submitOrderCourseError(response, status) {
-            // выводим содержимое ответа и статус в консоль.
-            console.log(response);
-            console.log(status);
-        }
-        // функция, которая отправляет AJAX-запрос с формой
-        // по клику на кнопку "Добавить"
-        function addOrderCourse() {
-            // определяем url для отправки формы course_form по её свойству action:
-            let url = $('#course_form').attr('action');
-            // собираем данные, указанные в форме course_form
-            let data = {
-                course: $('#id_course').val(),
-                quantity: $('#id_quantity').val(),
-                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
-            };
-            // отправляем данные
-            // опции success и error должны быть функциями,
-            // которые jQuery вызовет при успешной и неуспешной отправке запроса, соответственно
-            // (т.н. "колбэки" - "callback" - функции обратной связи).
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: data,
-                success: addOrderCourseSuccess,
-                error: submitOrderCourseError
-            });
-        }
-        // назначаем действие на нажатие кнопки "Добавить" в модалке.
-        $('#order_submit').on('click', function(e) {
-            // отправляем форму
-            $('#course_form').submit();
-        });
-        // назначаем действие на отправку формы course_form.
-        $('#course_form').on('submit', function(e) {
-            // отменить обычную отправку формы (действие по умолчанию с перезагрузкой страницы)
-            e.preventDefault();
-            // отправить форму с помощью функции addOrderCourse, которая использует AJAX-запрос.
-            addOrderCourse();
-        });
+
+
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    function onCreateSuccess(response, status) {
+    // выводим содержимое ответа и статус в консоль.
+          console.log("Dadada!");
+    console.log(response);
+    console.log(status);
+
+    // создаём новый пункт списка блюд
+    let newFoodLi = $('<li></li>');
+
+    let foodNameSpan = $('<span></span>')
+        .attr('id', 'order_course_name_' + response.course_pk)
+        .data('course_pk', response.course_pk)
+        .text(response.course);
+    let foodAmountSpan = $('<span></span>')
+        .attr('id', 'order_course_quantity_' + response.order_pk)
+        .text(response.quantity);
+    let editLink = $('<a></a>')
+        .addClass('edit_link')
+        .attr('href', response.edit_url)
+        .data('pk', response.course_pk)
+        .text('Изменить')
+        .click(onOrderCourseUpdate);
+    let deleteLink = $('<a></a>')
+        .attr('href', '#')
+        .text('Удалить');
+
+    console.log(foodNameSpan);
+        console.log(foodAmountSpan);
+        console.log(editLink);
+    newFoodLi
+        .attr('id', 'order_course_' + response.pk)
+        .append(foodNameSpan)
+        .append(document.createTextNode(': '))
+        .append(foodAmountSpan)
+        .append(document.createTextNode(' шт. ('))
+        .append(editLink)
+        .append(document.createTextNode(' / '))
+        .append(deleteLink)
+        .append(document.createTextNode(')'));
+
+    console.log(newFoodLi);
+    // добавляем новый пункт в список
+    $('#order_food_list').append(newFoodLi);
+
+    // выключаем модальное окно
+    $('#food_edit_modal').modal('hide');
+}
+
+
+// функция, которая обрабатывает успешный AJAX-запрос на изменение блюда
+function onUpdateSuccess(response, status) {
+    // выводим содержимое ответа и статус в консоль.
+    console.log(response);
+    console.log(status);
+
+    // находим нужное блюдо на странице и меняем его данные на новые, пришедшие в ответе
+    let pk = response['course_pk'];
+    let food_name_span = $('#order_course_name_' + pk);
+    food_name_span.text(response.course);
+    food_name_span.data('course_pk', response.course_pk);
+    $('#order_course_quantity_' + pk).text(response.quantity);
+    // прячем модалку
+    $('#food_edit_modal').modal('hide');
+}
+
+
+// функция, которая обрабатывает неуспешный AJAX-запрос
+// и на добавление, и на изменение блюда
+function onFormSubmitError(response, status) {
+    // выводим содержимое ответа и статус в консоль.
+    console.log("Netnetnet");
+    console.log(response);
+    console.log(status);
+
+    // если ответ содержит ключ errors,
+    // выводим его содержимое в специальный div в модалке
+    if (response.errors) {
+        $('#food_form_errors').text(response.errors.toString());
+    }
+}
+
+
+// функция, которая отправляет AJAX-запрос с формой
+// и вызывает переданную функцию в случае успеха
+function orderFoodFormSubmit(success) {
+    // определяем url для отправки формы food_form по её свойству action:
+    let url = $('#course_form').attr('action');
+
+    // собираем данные, указанные в форме food_form
+    let data = {
+        course: $('#id_course').val(),
+        quantity: $('#id_quantity').val(),
+        csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val()
+    };
+
+    // отправляем данные
+    // опции success и error должны быть функциями,
+    // которые jQuery вызовет при успешной и неуспешной отправке запроса, соответственно
+    // (т.н. "колбэки" - "callback" - функции обратной связи).
+    $.ajax({
+        url: url,
+        method: 'POST',
+        data: data,
+        success: success,
+        error: onFormSubmitError
+    });
+}
+
+
+// Обработка клика по ссылке "Добавить"
+function onOrderCourseCreate(event) {
+    event.preventDefault();
+
+    // меняем заголовок и текст на кнопке "Добавить" в модалке
+    $("#food_edit_modal .modal-title").text('Добавить блюдо');
+    $("#order_submit").text('Добавить');
+
+    // меняем action в форме в модалке на url,
+    // указанный в href нажатой ссылки на добавление.
+    // this в обработчиках событий указывает на тот объект,
+    // к которому привязано событие, в данному случае -
+    // на ту ссылку, которая была нажата.
+    let foodForm = $('#course_form');
+    foodForm.attr('action', $(this).attr('href'));
+
+    // сбрасываем данные в форме редактирования блюда в модалке на пустые значения
+    $('#id_course').val('');
+    $('#id_quantity').val('');
+
+    // отключаем предыдущие обработчики события отправки формы
+    foodForm.off('submit');
+
+    // назначаем действие на отправку формы food_form.
+    foodForm.on('submit', function (e) {
+        // отменить обычную отправку формы (действие по умолчанию с перезагрузкой страницы)
+        e.preventDefault();
+
+        // отправить форму с помощью функции orderFoodFormSubmit, которая использует AJAX-запрос.
+        // в случае успеха вызвать функцию onCreateSuccess
+        orderFoodFormSubmit(onCreateSuccess);
+    });
+
+    // показываем модалку на экране
+    $('#food_edit_modal').modal('show');
+}
+
+
+    function onOrderCourseUpdate(event) {
+    // отменяем действие по умолчанию (переход по ссылке)
+    event.preventDefault();
+
+    // меняем заголовок и текст на кнопке "Добавить" в модалке
+    $("#food_edit_modal .modal-title").text('Изменить блюдо');
+    $("#order_submit").text('Изменить');
+
+    // меняем action в форме в модалке на url,
+    // указанный в href нажатой ссылки на редактирование.
+    // this в обработчиках событий указывает на тот объект,
+    // к которому привязано событие, в данном случае -
+    // на ту ссылку, которая была нажата.
+    let foodForm = $('#course_form');
+    foodForm.attr('action', $(this).attr('href'));
+
+    // находим элементы с именем блюда и количеством блюда на странице,
+    // используя свойство data-pk нажатой ссылки.
+    let coursePk = $(this).data('pk');
+    let courseName = $('#order_course_name_' + coursePk);  // '#order_course_name_1'
+    let courseQuantity = $('#order_course_quantity_' + coursePk);  // '#order_course_quantity_1'
+        console.log(courseName);
+        console.log(courseQuantity.text());
+
+    // задаём в форме исходные значения для данного блюда в заказе.
+    // т.к. на странице выводится название блюда, а нам нужен его pk,
+    // pk сохраняем и получаем через data-атрибут food_pk.
+    $('#id_course').val(courseName.data('course_pk'));
+    $('#id_quantity').val(courseQuantity.text());
+
+    // отключаем предыдущие обработчики события отправки формы
+    foodForm.off('submit');
+
+    // задаём обработчик события отправки формы
+    foodForm.submit(function (event) {
+        // отменяем действие по умолчанию (обычная отправка формы)
+        event.preventDefault();
+
+        // отправить форму с помощью функции orderFoodFormSubmit, которая использует AJAX-запрос.
+        // в случае успеха вызвать функцию onUpdateSuccess
+        orderFoodFormSubmit(onUpdateSuccess);
+    });
+
+    // показываем модалку на экране.
+    $('#food_edit_modal').modal('show');
+}
+
+window.addEventListener('load', function () {
+    // назначаем действие на нажатие кнопки "Добавить" в модалке.
+    // кнопка не находится внутри формы, поэтому её требуется настроить здесь.
+    $('#order_submit').on('click', function (e) {
+        // отправляем форму
+        $('#course_form').submit();
+    });
+
+    // настраиваем создание блюд по клику на ссылку "Добавить"
+    $("#order_food_add_link").click(onOrderCourseCreate);
+
+    // настраиваем изменение блюд по клику на ссылки "Изменить"
+    $('#order_food_list .edit_link').click(onOrderCourseUpdate);
+});
+
     </script>
+
 {% endblock %}
 {# Откройте /order/<pk>, чтобы посмотреть список блюд для заказа на этой странице #}

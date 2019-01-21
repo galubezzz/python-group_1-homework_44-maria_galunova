@@ -165,11 +165,11 @@ class CourseOrderDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
     def get_success_url(self):
         return reverse('webapp:order_detail', kwargs={'pk': self.object.order.pk})
 
+
 class CourseOrderAjaxCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = CourseOrder
     form_class = CourseOrderForm
     permission_required = 'webapp.view_courseorder'
-
 
     def form_valid(self, form):
         form.instance.order = Order.objects.get(pk=self.kwargs.get('pk'))
@@ -178,7 +178,8 @@ class CourseOrderAjaxCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cre
             'course': order_course.course.name,
             'quantity': order_course.quantity,
             'order_pk': order_course.order.pk,
-            'pk': order_course.pk
+            'course_pk': order_course.pk,
+            'edit_url': reverse('webapp:order_course_update', kwargs={'pk': order_course.pk})
         })
 
     def form_invalid(self, form):
@@ -186,3 +187,23 @@ class CourseOrderAjaxCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cre
             'errors': form.errors
         }, status='422')
 
+
+class CourseOrderAjaxUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = CourseOrder
+    form_class = CourseOrderForm
+    permission_required = "webapp.change_courseorder"
+
+    def form_valid(self, form):
+        order_course = form.save()
+        return JsonResponse({
+            'course': order_course.course.name,
+            'quantity': order_course.quantity,
+            'order_pk': order_course.order.pk,
+            'course_pk': order_course.pk,
+
+        })
+
+    def form_invalid(self, form):
+        return JsonResponse({
+            'errors': form.errors
+        }, status='422')

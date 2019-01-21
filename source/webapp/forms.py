@@ -6,10 +6,12 @@ class CourseForm(forms.ModelForm):
         model = Course
         exclude =[]
 
+
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         exclude = ['status', 'operator', 'courier']
+
 
 class OrderUpdateForm(forms.ModelForm):
     class Meta:
@@ -21,6 +23,7 @@ class CourseOrderForm(forms.ModelForm):
     class Meta:
         model = CourseOrder
         exclude = ['order']
+
 
 class StatusForm(forms.ModelForm):
     class Meta:
