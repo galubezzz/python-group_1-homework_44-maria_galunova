@@ -10,7 +10,7 @@
     <ul id="order_food_list">
         {% for order_course in order.courses.all %}
             <li>
-                <span id="order_course_name_{{ order_course.pk }}" data-course_pk="{{ order_course.course.pk }}">{{ order_course.course.name }}</span>
+                <span id="order_course_name_{{ order_course.pk }}" data-pk="{{ order_course.course.pk }}">{{ order_course.course.name }}</span>
                 <span id="order_course_quantity_{{ order_course.pk }}">{{ order_course.quantity }}</span> шт <br>
                 (<a href="{% url 'webapp:order_course_update' order_course.pk %}" data-pk="{{ order_course.pk }}" class="edit_link">Изменить</a>/
                 <a href="{% url 'webapp:order_course_delete' order_course.pk %}" class="delete_link">Удалить</a>)
@@ -59,25 +59,22 @@
     let newFoodLi = $('<li></li>');
 
     let foodNameSpan = $('<span></span>')
-        .attr('id', 'order_course_name_' + response.course_pk)
-        .data('course_pk', response.course_pk)
+        .attr('id', 'order_course_name_' + response.pk)
+        .attr('data-pk', response.course_pk)
         .text(response.course);
     let foodAmountSpan = $('<span></span>')
-        .attr('id', 'order_course_quantity_' + response.order_pk)
+        .attr('id', 'order_course_quantity_' + response.pk)
         .text(response.quantity);
     let editLink = $('<a></a>')
         .addClass('edit_link')
         .attr('href', response.edit_url)
-        .data('pk', response.course_pk)
+        .attr('data-pk', response.pk)
         .text('Изменить')
         .click(onOrderCourseUpdate);
     let deleteLink = $('<a></a>')
         .attr('href', '#')
         .text('Удалить');
 
-    console.log(foodNameSpan);
-        console.log(foodAmountSpan);
-        console.log(editLink);
     newFoodLi
         .attr('id', 'order_course_' + response.pk)
         .append(foodNameSpan)
@@ -119,7 +116,7 @@
 // и на добавление, и на изменение блюда
     function onFormSubmitError(response, status) {
     // выводим содержимое ответа и статус в консоль.
-    console.log("Netnetnet");
+
     console.log(response);
     console.log(status);
 
@@ -198,6 +195,7 @@
 
     function onOrderCourseUpdate(event) {
         // отменяем действие по умолчанию (переход по ссылке)
+
         event.preventDefault();
 
         // меняем заголовок и текст на кнопке "Добавить" в модалке
@@ -217,13 +215,12 @@
         let coursePk = $(this).data('pk');
         let courseName = $('#order_course_name_' + coursePk);  // '#order_course_name_1'
         let courseQuantity = $('#order_course_quantity_' + coursePk);  // '#order_course_quantity_1'
-        console.log(courseName);
-        console.log(courseQuantity.text());
+
 
         // задаём в форме исходные значения для данного блюда в заказе.
         // т.к. на странице выводится название блюда, а нам нужен его pk,
         // pk сохраняем и получаем через data-атрибут food_pk.
-        $('#id_course').val(courseName.data('course_pk'));
+        $('#id_course').val(courseName.data('pk'));
         $('#id_quantity').val(courseQuantity.text());
 
         // отключаем предыдущие обработчики события отправки формы
@@ -245,7 +242,7 @@
 
     function onOrderCourseDelete(event) {
         event.preventDefault();
-        console.log("Ebanina!");
+
         if (confirm('Вы действительно хотите удалить блюдо?')) {
             // если пользователь подтверждает удаление, сохраняем ссылку на удаляемое блюдо
             // из атрибута 'href' в переменную url

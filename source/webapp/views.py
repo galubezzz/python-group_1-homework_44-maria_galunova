@@ -177,8 +177,8 @@ class CourseOrderAjaxCreateView(LoginRequiredMixin, PermissionRequiredMixin, Cre
         return JsonResponse({
             'course': order_course.course.name,
             'quantity': order_course.quantity,
-            'order_pk': order_course.order.pk,
-            'course_pk': order_course.pk,
+            'pk': order_course.pk,
+            'course_pk': order_course.course.pk,
             'edit_url': reverse('webapp:order_course_update', kwargs={'pk': order_course.pk})
         })
 
@@ -198,8 +198,8 @@ class CourseOrderAjaxUpdateView(LoginRequiredMixin, PermissionRequiredMixin, Upd
         return JsonResponse({
             'course': order_course.course.name,
             'quantity': order_course.quantity,
-            'order_pk': order_course.order.pk,
-            'course_pk': order_course.pk,
+            'pk': order_course.pk,
+            'course_pk': order_course.course.pk,
 
         })
 
